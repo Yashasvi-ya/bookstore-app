@@ -1,7 +1,38 @@
-import React from "react";
-import { Link } from "react-router-dom";
+import React, { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
 
 export default function SignIn() {
+  const [formData, setFormData] = useState({});
+  const [errorMessage, setErrorMessage] = useState(null);
+  const navigate = useNavigate();
+
+  const handleChange = (e) => {
+    setFormData({ ...formData, [e.target.id]: e.target.value.trim() });
+    // console.log(formData)
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    if (!formData.email || !formData.password) {
+      return setErrorMessage("Please fill all fields");
+    }
+    try {
+      setErrorMessage(null);
+      const res = await fetch("/api/auth/signin", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(formData),
+      });
+      const data = await res.json();
+      if (data.success === false) return setErrorMessage(data.message);
+      if (res.ok) {
+        navigate("/");
+      }
+    } catch (error) {
+      setErrorMessage(error.message);
+    }
+  };
+
   return (
     <div className="h-screen w-full flex flex-row justify-between items-center">
       <div className="h-full w-1/2 flex flex-col justify-center items-center">
@@ -14,26 +45,45 @@ export default function SignIn() {
       <div className="w-1/2 flex flex-col justify-center items-center gap-5">
         <h1 className="text-4xl font-bold">Sign In here!</h1>
         <div className="w-1/2">
-        <form className="flex flex-col justify-center items-center gap-3">
-          <input
-            type="text"
-            placeholder="email"
-            className="border-2 border-sasquatch rounded-lg p-3 w-full"
+          <form
+            onSubmit={handleSubmit}
+            className="flex flex-col justify-center items-center gap-3"
+          >
+            <input
+              type="text"
+              placeholder="email"
+              id="email"
+              className="border-2 border-sasquatch rounded-lg p-3 w-full"
+              onChange={handleChange}
             />
-          <input
-            type="password"
-            placeholder="password"
-            className="border-2 border-sasquatch rounded-lg p-3 w-full"
+            <input
+              type="password"
+              placeholder="password"
+              id="password"
+              className="border-2 border-sasquatch rounded-lg p-3 w-full"
+              onChange={handleChange}
             />
-          <button type="submit" className="p-3 w-full font-mono font-bold border-[#EAB543] border-2 rounded-lg  hover:bg-[#EAB543]">
-            Sign In
-          </button>
-        </form>
+            <button
+              type="submit"
+              className="p-3 w-full font-mono font-bold border-[#EAB543] border-2 rounded-lg  hover:bg-[#EAB543]"
+            >
+              Sign In
+            </button>
+          </form>
         </div>
         <p>
-          New User ? <Link to={'/signup'} className="underline"> Sign up here</Link>
+          New User ?{" "}
+          <Link to={"/signup"} className="underline">
+            {" "}
+            Sign up here
+          </Link>
         </p>
       </div>
+      {errorMessage && (
+        <h2 className="mt-5" color="failure">
+          {errorMessage}
+        </h2>
+      )}
     </div>
   );
 }
