@@ -1,6 +1,4 @@
 import mongoose from "mongoose";
-import { type } from "os";
-import { string } from "prop-types";
 
 const userSchema = mongoose.Schema({
     username:{
