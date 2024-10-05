@@ -1,10 +1,11 @@
 import React, { useState } from "react";
 import { CgProfile } from "react-icons/cg";
+import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 
 export default function Header() {
 
-  const [user, setUser] = useState('')
+  const {currentUser} = useSelector((state) => state.user);
   return (
     <div className="md:h-20 w-full bg-whitepepper p-5 flex md:flex-row flex-wrap justify-between items-center sm:flex-col sm:h-64 ">
       <Link to={"/"}>
@@ -20,7 +21,7 @@ export default function Header() {
           </Link>
         </ul>
         {
-          user ? (
+          currentUser ? (
             <Link to={"/profile"}>
           <CgProfile className="h-full w-10" />
         </Link>

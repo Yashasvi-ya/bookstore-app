@@ -1,10 +1,18 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import {
+  signInStart,
+  signInFailure,
+  signInSuccess,
+} from "../redux/user/userSlice";
+import { useDispatch, useSelector } from "react-redux";
 
 export default function SignIn() {
   const [formData, setFormData] = useState({});
-  const [errorMessage, setErrorMessage] = useState(null);
+  const { currentUser,  loading, error: errorMessage } = useSelector(state => state.user);
+  console.log(currentUser, loading, errorMessage)
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.id]: e.target.value.trim() });
@@ -14,22 +22,23 @@ export default function SignIn() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!formData.email || !formData.password) {
-      return setErrorMessage("Please fill all fields");
+      return dispatch(signInFailure("Please fill all fields"));
     }
     try {
-      setErrorMessage(null);
+      dispatch(signInStart());
       const res = await fetch("/api/auth/signin", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(formData),
       });
       const data = await res.json();
-      if (data.success === false) return setErrorMessage(data.message);
+      if (data.success === false) return dispatch(signInFailure(data.message));
       if (res.ok) {
+        dispatch(signInSuccess(data));
         navigate("/");
       }
     } catch (error) {
-      setErrorMessage(error.message);
+      dispatch(signInFailure(error.message));
     }
   };
 
@@ -63,12 +72,14 @@ export default function SignIn() {
               className="border-2 border-sasquatch rounded-lg p-3 w-full"
               onChange={handleChange}
             />
-            <button
-              type="submit"
-              className="p-3 w-full font-mono font-bold border-[#EAB543] border-2 rounded-lg  hover:bg-[#EAB543]"
-            >
-              Sign In
-            </button>
+            {!loading && (
+              <button
+                type="submit"
+                className="p-3 w-full font-mono font-bold border-[#EAB543] border-2 rounded-lg  hover:bg-[#EAB543]"
+              >
+                Sign In
+              </button>
+            )}
           </form>
         </div>
         <p>
