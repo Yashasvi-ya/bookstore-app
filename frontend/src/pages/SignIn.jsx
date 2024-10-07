@@ -10,13 +10,14 @@ import { useDispatch, useSelector } from "react-redux";
 export default function SignIn() {
   const [formData, setFormData] = useState({});
   const { currentUser,  loading, error: errorMessage } = useSelector(state => state.user);
-  console.log(currentUser, loading, errorMessage)
+  // console.log(currentUser, loading, errorMessage)
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.id]: e.target.value.trim() });
     // console.log(formData)
+    console.log(currentUser)
   };
 
   const handleSubmit = async (e) => {
@@ -32,11 +33,11 @@ export default function SignIn() {
         body: JSON.stringify(formData),
       });
       const data = await res.json();
-      if (data.success === false) return dispatch(signInFailure(data.message));
       if (res.ok) {
         dispatch(signInSuccess(data));
         navigate("/");
       }
+      else dispatch(signInFailure(data.message))
     } catch (error) {
       dispatch(signInFailure(error.message));
     }
@@ -89,12 +90,12 @@ export default function SignIn() {
             Sign up here
           </Link>
         </p>
-      </div>
       {errorMessage && (
-        <h2 className="mt-5" color="failure">
+        <h2 className="p-5 text-red-500 bg-red-100 rounded-md" >
           {errorMessage}
         </h2>
       )}
+      </div>
     </div>
   );
 }

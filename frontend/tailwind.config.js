@@ -5,13 +5,14 @@ export default {
     "./src/**/*.{js,ts,jsx,tsx}",
   ],
   theme: {
-    colors:{
-      honeyglow : '#EAB543',
-      whitepepper : '#F8EFBA',
-      peach : '#FD7272',
-      sasquatch : '#FC427B'
+    extend: {
+      colors:{
+        honeyglow : '#EAB543',
+        whitepepper : '#F8EFBA',
+        peach : '#FD7272',
+        sasquatch : '#FC427B'
+      },
     },
-    extend: {},
   },
   plugins: [],
 }
