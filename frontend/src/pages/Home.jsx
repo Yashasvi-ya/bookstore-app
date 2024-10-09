@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { Suspense, useEffect, useState } from 'react'
 import Card from '../components/Card'
 
 export default function Home() {
@@ -40,8 +40,8 @@ export default function Home() {
       {/* Just Filler text to stop api limit */}
       {books.map((book) => (
         <Card
-          key = {book.key}
-          bookkey={book.key}
+          key={book.cover_edition_key}
+          bookkey={book.cover_edition_key}
           title={book.title}
           author={book.authors ? book.authors.map(author => author.name).join(', ') : 'Unknown'}
           cover={book.cover_id ? book.cover_id : ''} 

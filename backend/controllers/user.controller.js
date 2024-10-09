@@ -23,19 +23,20 @@ export const getbooks = async (req, res) => {
 };
 
 export const favorite = async (req, res) => {
-  const { userId, bookId } = req.body;
+  const { userId, bookId, title, author, cover } = req.body;
   try {
     const user = await User.findById(userId);
     if (!user) return res.status(404).json({ message: "User not found" });
 
-    const index = user.favorites.indexOf(bookId);
-    if (index > -1) {
+    const index = user.favorites.findIndex((book) => book.bookId === bookId);
+
+    if (index !== -1) {
       user.favorites.splice(index, 1);
     } else {
-      user.favorites.push(bookId);
+      user.favorites.push({ bookId, title, author, cover });
     }
     await user.save();
-    const {password, ...rest} = user._doc
+    const { password, ...rest } = user._doc;
     res.status(200).json(rest);
   } catch (error) {
     res.status(500).json({ message: error.message });

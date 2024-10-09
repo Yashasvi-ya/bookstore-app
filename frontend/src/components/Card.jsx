@@ -21,7 +21,10 @@ export default function Card(props) {
           },
         body: JSON.stringify({
           userId : currentUser._id,
-          bookId: bookkey
+          bookId: bookkey,
+          title : title,
+          author : author,
+          cover : cover
         })
       })
       const data = await response.json();
@@ -34,7 +37,7 @@ export default function Card(props) {
   };
 
   useEffect(() => {
-    if(currentUser.favorites.includes(bookkey)){
+    if(currentUser.favorites.findIndex((book)=>book.bookId === bookkey) !== -1){
       setFavorite(true)
     }
     else setFavorite(false)

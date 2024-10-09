@@ -15,7 +15,7 @@ const userSchema = mongoose.Schema({
         required:true,
     },
     favorites:[{
-        type : String,
+        type : Object,
         required :true
     }]
 },{timstamps : true}
