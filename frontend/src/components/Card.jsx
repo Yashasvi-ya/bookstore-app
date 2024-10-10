@@ -55,10 +55,10 @@ export default function Card(props) {
           <h3 className="font-thin">{author}</h3>
 
           {favorite ? (
-            <FaHeart className="text-red-500 w-8 h-8" onClick={handleChange} />
+            <FaHeart className="text-red-500 w-8 h-8 hover:cursor-pointer" onClick={handleChange} />
           ) : (
             <FaRegHeart
-              className="text-red-500 w-8 h-8"
+              className="text-red-500 w-8 h-8 hover:cursor-pointer"
               onClick={handleChange}
             />
           )}
