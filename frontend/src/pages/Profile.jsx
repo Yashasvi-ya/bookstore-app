@@ -1,9 +1,10 @@
-import React from "react";
+import React, { lazy, Suspense } from "react";
 import { CgProfile } from "react-icons/cg";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { signOutSuccess } from "../redux/user/userSlice";
-import ProfileCard from "../components/ProfileCard";
+const ProfileCard = lazy(() => import ("../components/ProfileCard"))
+
 
 
 export default function Profile() {
@@ -52,7 +53,9 @@ export default function Profile() {
             {
               currentUser.favorites.map((book)=>{
                 return <>
+                <Suspense fallback={<p>Loading</p>}>
                 <div key={book.bookId}><ProfileCard book ={book}/></div>
+                </Suspense>
                 </>
               })
             }
